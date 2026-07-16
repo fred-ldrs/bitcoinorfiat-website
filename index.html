@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Bitcoin or Fiat? – Free Bitcoin Quiz</title>
+    <meta name="description" content="Fixed supply or printed at will? Censorship-resistant or controlled? Test whether you know the real differences between Bitcoin and Fiat money. Free, no sign-up.">
+    <link rel="canonical" href="https://bitcoinorfiat.lueders.app/" />
+    <meta property="og:title" content="Bitcoin or Fiat? – Free Bitcoin Quiz">
+    <meta property="og:description" content="Fixed supply. Peer-to-peer. Censorship-resistant. — Or printed at will, controlled, inflationary? Can you tell Bitcoin from Fiat? Play free, no sign-up.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bitcoinorfiat.lueders.app/">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div>
+                <p class="site-title" id="hdr-title">₿ <span class="btc-word">Bitcoin</span> or Fiat?</p>
+                <p class="header-tagline" id="hdr-tagline">The free money trivia quiz</p>
+            </div>
+            <nav class="lang-switcher" aria-label="Language">
+                <button class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+                <button class="lang-btn" data-lang="de" aria-pressed="false">DE</button>
+                <button class="lang-btn" data-lang="fr" aria-pressed="false">FR</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ── Intro ───────────────────────────────────── -->
+        <section class="intro">
+            <div class="container">
+                <h1>₿ <span class="btc-word">Bitcoin</span> or <span class="fiat-word">Fiat</span>?</h1>
+                <p id="intro-desc">
+                    Fixed supply. Censorship-resistant. Peer-to-peer. — Or printed at will, controlled, inflationary?
+                    Can you tell them apart?
+                </p>
+            </div>
+        </section>
+
+        <!-- ── Quiz ───────────────────────────────────── -->
+        <section class="quiz-section">
+            <div class="container">
+
+                <!-- Question screen -->
+                <div id="quiz-screen">
+                    <p class="quiz-progress-label" id="q-progress">Question 1 of 10</p>
+                    <div class="quiz-bar-track">
+                        <div class="quiz-bar-fill" id="q-bar"></div>
+                    </div>
+                    <div class="quiz-card">
+                        <div class="quiz-name" id="q-name">—</div>
+                        <div class="quiz-feedback" id="q-feedback"></div>
+                    </div>
+                    <div class="quiz-answers">
+                        <button class="btn-answer btn-answer--bitcoin" id="btn-bitcoin">
+                            ₿ Bitcoin
+                        </button>
+                        <button class="btn-answer btn-answer--fiat" id="btn-fiat">
+                            💵 Fiat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results screen -->
+                <div id="quiz-results" hidden>
+                    <div class="result-score" id="res-score"></div>
+                    <p class="result-label" id="res-label">out of 10 correct</p>
+                    <p class="result-verdict" id="res-verdict"></p>
+                    <ul class="review-list" id="review-list"></ul>
+                    <button class="btn-restart" id="btn-restart">↺ Play again</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ── About ──────────────────────────────────── -->
+        <section class="about-section">
+            <div class="container">
+                <h2 id="about-title">About Bitcoin or Fiat?</h2>
+                <div id="faq-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <a href="https://legal.lueders.solutions/en/imprint/" target="_blank" rel="noopener noreferrer" id="footer-imprint">Imprint</a>
+                &nbsp;|&nbsp;
+                <a href="https://legal.lueders.solutions/en/privacy/web-bitcoinorfiat/" target="_blank" rel="noopener noreferrer" id="footer-privacy">Privacy Policy</a>
+            </p>
+            <p style="margin-top:6px;">Made by <a href="https://lueders.app" target="_blank" rel="noopener noreferrer">lueders.app</a></p>
+        </div>
+    </footer>
+
+    <script src="questions.js"></script>
+    <script>
+    // ── Translations ─────────────────────────────────────────────────────────
+    const T = {
+      en: {
+        htmlLang:    'en',
+        tagline:     'The free money trivia quiz',
+        introPara:   'Fixed supply. Censorship-resistant. Peer-to-peer. — Or printed at will, controlled, inflationary? Can you tell them apart?',
+        progress:    (n, t) => `Question ${n} of ${t}`,
+        btnBitcoin:  '₿ Bitcoin',
+        btnFiat:     '💵 Fiat',
+        correct:     (type) => `✓ Correct — this is a ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'} property!`,
+        wrong:       (type) => `✗ Nope — this is actually a ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'} property.`,
+        outOf:       'out of 10 correct',
+        playAgain:   '↺ Play again',
+        verdicts: [
+          [10, 'Perfect! You truly get it. 🏆'],
+          [9,  'Excellent! Almost flawless.'],
+          [7,  'Great job! You know your money.'],
+          [5,  'Not bad — a few slipped past.'],
+          [3,  'Getting there! Keep learning.'],
+          [0,  'The orange pill awaits. Try again!'],
+        ],
+        aboutTitle: 'About Bitcoin or Fiat?',
+        faq: [
+          { q: 'How does this quiz work?',
+            a: 'Each round draws 10 statements from a pool of 30 properties (15 Bitcoin + 15 Fiat). Your job: decide whether each statement describes Bitcoin or traditional Fiat currency. Hit <em>Play again</em> for a different mix.' },
+          { q: 'Why does Bitcoin have a fixed supply?',
+            a: 'Satoshi Nakamoto hard-coded a maximum of 21 million BTC into Bitcoin\'s protocol. No one can ever change this — it protects Bitcoin from inflation by design, unlike Fiat money which can be printed at will.' },
+          { q: 'What is the halving?',
+            a: 'Every ~4 years (every 210,000 blocks), the reward miners receive for validating transactions is cut in half. This makes Bitcoin progressively more scarce, following a disinflationary supply schedule.' },
+          { q: 'What is self-custody?',
+            a: 'Holding your own private keys means no bank, exchange, or government can seize or freeze your Bitcoin. <em>"Not your keys, not your coins."</em>' },
+          { q: 'What is Fiat money?',
+            a: 'Fiat currency (USD, EUR, JPY…) has value because governments declare it legal tender — not because it is backed by a scarce commodity. Unlike Bitcoin, more Fiat can always be created, which leads to inflation over time.' },
+        ],
+        footerImprint: 'Imprint',
+        footerPrivacy: 'Privacy Policy',
+      },
+
+      de: {
+        htmlLang:    'de',
+        tagline:     'Das kostenlose Geld-Quiz',
+        introPara:   'Festes Angebot. Zensurresistent. Peer-to-Peer. — Oder nach Belieben gedruckt, kontrolliert, inflationär? Kannst du sie unterscheiden?',
+        progress:    (n, t) => `Frage ${n} von ${t}`,
+        btnBitcoin:  '₿ Bitcoin',
+        btnFiat:     '💵 Fiat',
+        correct:     (type) => `✓ Richtig — das ist eine ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'}-Eigenschaft!`,
+        wrong:       (type) => `✗ Leider falsch — das ist eine ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'}-Eigenschaft.`,
+        outOf:       'von 10 richtig',
+        playAgain:   '↺ Nochmal spielen',
+        verdicts: [
+          [10, 'Perfekt! Du hast es wirklich begriffen. 🏆'],
+          [9,  'Ausgezeichnet! Fast makellos.'],
+          [7,  'Gut gemacht! Du kennst dein Geld.'],
+          [5,  'Nicht schlecht — ein paar haben dich erwischt.'],
+          [3,  'Auf dem richtigen Weg! Lern weiter.'],
+          [0,  'Die orange Pille wartet auf dich. Versuch\'s nochmal!'],
+        ],
+        aboutTitle: 'Über Bitcoin or Fiat?',
+        faq: [
+          { q: 'Wie funktioniert das Quiz?',
+            a: 'Jede Runde zieht 10 Aussagen aus einem Pool von 30 Eigenschaften (15 Bitcoin + 15 Fiat). Deine Aufgabe: Entscheide, ob jede Aussage Bitcoin oder traditionelles Fiat-Geld beschreibt. Drücke <em>Nochmal spielen</em> für eine andere Auswahl.' },
+          { q: 'Warum hat Bitcoin ein festes Angebot?',
+            a: 'Satoshi Nakamoto hat eine Obergrenze von 21 Millionen BTC unveränderlich im Bitcoin-Protokoll verankert. Niemand kann das jemals ändern — das schützt Bitcoin durch Design vor Inflation, anders als Fiat-Geld, das nach Belieben gedruckt werden kann.' },
+          { q: 'Was ist das Halving?',
+            a: 'Alle ~4 Jahre (alle 210.000 Blöcke) wird die Belohnung für Miner halbiert. Das macht Bitcoin schrittweise knapper und folgt einem deflationären Ausgabeplan.' },
+          { q: 'Was ist Selbstverwahrung?',
+            a: 'Wer seine eigenen privaten Schlüssel hält, dem kann keine Bank, Börse oder Regierung die Bitcoin wegnehmen oder einfrieren. <em>„Not your keys, not your coins."</em>' },
+          { q: 'Was ist Fiat-Geld?',
+            a: 'Fiat-Währungen (USD, EUR, JPY…) haben Wert, weil Regierungen sie als gesetzliches Zahlungsmittel festlegen — nicht weil sie durch ein knappes Gut gedeckt sind. Anders als Bitcoin kann immer mehr davon geschaffen werden, was langfristig zu Inflation führt.' },
+        ],
+        footerImprint: 'Impressum',
+        footerPrivacy: 'Datenschutz',
+      },
+
+      fr: {
+        htmlLang:    'fr',
+        tagline:     'Le quiz gratuit sur la monnaie',
+        introPara:   'Offre fixe. Résistant à la censure. Pair-à-pair. — Ou imprimé à volonté, contrôlé, inflationniste ? Pouvez-vous les distinguer ?',
+        progress:    (n, t) => `Question ${n} sur ${t}`,
+        btnBitcoin:  '₿ Bitcoin',
+        btnFiat:     '💵 Fiat',
+        correct:     (type) => `✓ Correct — c'est une propriété du ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'} !`,
+        wrong:       (type) => `✗ Faux — c'est en fait une propriété du ${type === 'bitcoin' ? 'Bitcoin' : 'Fiat'}.`,
+        outOf:       'sur 10 correct(s)',
+        playAgain:   '↺ Rejouer',
+        verdicts: [
+          [10, 'Parfait ! Vous avez vraiment compris. 🏆'],
+          [9,  'Excellent ! Presque parfait.'],
+          [7,  'Bien joué ! Vous connaissez votre argent.'],
+          [5,  'Pas mal — quelques-uns vous ont échappé.'],
+          [3,  'En bonne voie ! Continuez à apprendre.'],
+          [0,  'La pilule orange vous attend. Réessayez !'],
+        ],
+        aboutTitle: 'À propos de Bitcoin or Fiat ?',
+        faq: [
+          { q: 'Comment fonctionne ce quiz ?',
+            a: 'Chaque manche tire 10 affirmations d\'un pool de 30 propriétés (15 Bitcoin + 15 Fiat). Votre mission : décider si chaque affirmation décrit le Bitcoin ou la monnaie fiduciaire traditionnelle. Appuyez sur <em>Rejouer</em> pour un tirage différent.' },
+          { q: 'Pourquoi Bitcoin a-t-il une offre fixe ?',
+            a: 'Satoshi Nakamoto a codé en dur un maximum de 21 millions de BTC dans le protocole Bitcoin. Personne ne peut jamais modifier cela — cela protège Bitcoin contre l\'inflation par conception, contrairement à la monnaie fiduciaire qui peut être imprimée à volonté.' },
+          { q: 'Qu\'est-ce que le halving ?',
+            a: 'Tous les ~4 ans (tous les 210 000 blocs), la récompense des mineurs est divisée par deux. Cela rend Bitcoin progressivement plus rare, suivant un calendrier d\'émission désinflationiste.' },
+          { q: 'Qu\'est-ce que l\'auto-conservation ?',
+            a: 'Détenir ses propres clés privées signifie qu\'aucune banque, plateforme d\'échange ou gouvernement ne peut saisir ou geler votre Bitcoin. <em>« Not your keys, not your coins. »</em>' },
+          { q: 'Qu\'est-ce que la monnaie fiduciaire ?',
+            a: 'Les monnaies fiduciaires (USD, EUR, JPY…) ont de la valeur parce que les gouvernements les déclarent cours légal — pas parce qu\'elles sont adossées à une ressource rare. Contrairement au Bitcoin, on peut toujours en créer davantage, ce qui entraîne de l\'inflation.' },
+        ],
+        footerImprint: 'Mentions légales',
+        footerPrivacy: 'Politique de confidentialité',
+      },
+    };
+
+    // ── DOM refs ──────────────────────────────────────────────────────────────
+    const screenEl    = document.getElementById('quiz-screen');
+    const resultsEl   = document.getElementById('quiz-results');
+    const qNameEl     = document.getElementById('q-name');
+    const qProgressEl = document.getElementById('q-progress');
+    const qBarEl      = document.getElementById('q-bar');
+    const feedbackEl  = document.getElementById('q-feedback');
+    const btnBitcoin  = document.getElementById('btn-bitcoin');
+    const btnFiat     = document.getElementById('btn-fiat');
+    const btnRestart  = document.getElementById('btn-restart');
+    const resScoreEl  = document.getElementById('res-score');
+    const resLabelEl  = document.getElementById('res-label');
+    const resVerdictEl= document.getElementById('res-verdict');
+    const reviewListEl= document.getElementById('review-list');
+    const faqContainer= document.getElementById('faq-container');
+
+    const TOTAL = 10;
+    let lang = 'en', questions = [], current = 0, score = 0, answers = [];
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function verdict(s) {
+        return T[lang].verdicts.find(([min]) => s >= min)[1];
+    }
+
+    // ── i18n / language switch ────────────────────────────────────────────────
+    function applyLang(l) {
+        lang = l;
+        const t = T[l];
+
+        document.documentElement.lang = t.htmlLang;
+        document.getElementById('hdr-tagline').textContent  = t.tagline;
+        document.getElementById('intro-desc').textContent   = t.introPara;
+        document.getElementById('about-title').textContent  = t.aboutTitle;
+        document.getElementById('footer-imprint').textContent = t.footerImprint;
+        document.getElementById('footer-privacy').textContent = t.footerPrivacy;
+        btnBitcoin.textContent = t.btnBitcoin;
+        btnFiat.textContent    = t.btnFiat;
+        btnRestart.textContent = t.playAgain;
+
+        // Update lang buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const active = btn.dataset.lang === l;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-pressed', String(active));
+        });
+
+        // Render FAQ
+        faqContainer.innerHTML = t.faq.map(item => `
+            <details>
+                <summary>${item.q}</summary>
+                <p class="faq-body">${item.a}</p>
+            </details>`).join('');
+    }
+
+    // ── Quiz logic ────────────────────────────────────────────────────────────
+    function generateQuiz() {
+        const pool = QUESTIONS[lang];
+        const btcQ  = shuffle(pool.filter(q => q.answer === 'bitcoin')).slice(0, TOTAL / 2);
+        const fiatQ = shuffle(pool.filter(q => q.answer === 'fiat')).slice(0, TOTAL / 2);
+        return shuffle([...btcQ, ...fiatQ]);
+    }
+
+    function startQuiz() {
+        questions = generateQuiz();
+        current = score = 0;
+        answers = [];
+        resultsEl.hidden = true;
+        screenEl.hidden  = false;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = questions[current];
+        qNameEl.textContent = q.text;
+        qProgressEl.textContent = T[lang].progress(current + 1, TOTAL);
+        qBarEl.style.width = `${(current / TOTAL) * 100}%`;
+        feedbackEl.textContent = '';
+        feedbackEl.className   = 'quiz-feedback';
+        btnBitcoin.disabled    = false;
+        btnFiat.disabled       = false;
+    }
+
+    function handleAnswer(guess) {
+        btnBitcoin.disabled = btnFiat.disabled = true;
+        const q  = questions[current];
+        const ok = guess === q.answer;
+        if (ok) score++;
+        answers.push({ text: q.text, answer: q.answer, guess, correct: ok });
+
+        const t = T[lang];
+        feedbackEl.textContent = ok ? t.correct(q.answer) : t.wrong(q.answer);
+        feedbackEl.className = 'quiz-feedback ' + (ok ? 'quiz-feedback--correct' : 'quiz-feedback--wrong');
+
+        current++;
+        if (current < TOTAL) setTimeout(showQuestion, 950);
+        else setTimeout(showResults, 1050);
+    }
+
+    function showResults() {
+        const t = T[lang];
+        qBarEl.style.width     = '100%';
+        resScoreEl.textContent = score;
+        resLabelEl.textContent = t.outOf;
+        resVerdictEl.textContent = verdict(score);
+
+        reviewListEl.innerHTML = '';
+        answers.forEach(a => {
+            const li = document.createElement('li');
+            li.className = a.correct ? 'r-correct' : 'r-wrong';
+            li.innerHTML = `
+                <span class="review-name">${a.text}</span>
+                <span class="review-badge review-badge--${a.answer}">${a.answer === 'bitcoin' ? '₿ Bitcoin' : '💵 Fiat'}</span>
+                <span class="review-icon ${a.correct ? 'review-icon--correct' : 'review-icon--wrong'}">${a.correct ? '✓' : '✗'}</span>
+            `;
+            reviewListEl.appendChild(li);
+        });
+
+        screenEl.hidden  = true;
+        resultsEl.hidden = false;
+    }
+
+    // ── Event listeners ───────────────────────────────────────────────────────
+    btnBitcoin.addEventListener('click', () => handleAnswer('bitcoin'));
+    btnFiat.addEventListener('click',    () => handleAnswer('fiat'));
+    btnRestart.addEventListener('click', startQuiz);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            applyLang(btn.dataset.lang);
+            startQuiz();
+        });
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    applyLang('en');
+    startQuiz();
+    </script>
+</body>
+</html>
